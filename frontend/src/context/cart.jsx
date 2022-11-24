@@ -21,22 +21,32 @@ export function CartProvider({ children }) {
     return localStorage.getItem("items");
   };
 
-  //   useEffect(() => {
-  //     let mounted = true;
-  //     mounted && setItems(JSON.parse(window.localStorage.getItem("items")));
+  useEffect(() => {
+    let mounted = true;
+    let localCart = JSON.parse(getFromLocalStorage());
 
-  //     return () => (mounted = false);
-  //   }, []);
+    mounted && localCart && setItems(localCart);
+    return () => (mounted = false);
+  }, []);
 
   //   add id later
   const addToCart = (name, image, qty, price) => {
-    const itemStatus = items.filter((data) =>
-      data.name.toLowerCase().includes(name.toLowerCase())
+    // const itemStatus = items.find((data) =>
+    //   data.name.toLowerCase().includes(name.toLowerCase())
+    // );
+    // itemStatus
+    //   ? updateCartItem(name, qty)
+    //   : setItems((prev) => [...prev, { name, image, qty, price }]);
+    let cartCopy = [...items];
+    let existingItem = cartCopy.find((cartItem) =>
+      cartItem.name.toLowerCase().includes(name.toLowerCase())
     );
-    itemStatus.length > 0
-      ? updateCartItem(name, qty)
-      : setItems((prev) => [...prev, { name, image, qty, price }]);
-    setToLocalStorage(items);
+    existingItem
+      ? (existingItem.qty += qty)
+      : //if item doesn't exist, simply add it
+        cartCopy.push({ name, image, qty, price });
+    setItems(cartCopy);
+    setToLocalStorage(cartCopy);
   };
 
   // const confirmOrder
@@ -54,16 +64,23 @@ export function CartProvider({ children }) {
     items[id].qty += qty;
     // setback into state
     setItems((prev) => [...prev]);
+    setToLocalStorage(items);
   };
 
   //   remove item from cart
   const removeFromCart = (id) => {
-    setItems([...items.slice(0, id), ...items.slice(id + 1)]);
+    // setItems([...items.slice(0, id), ...items.slice(id + 1)]);
+    let cartCopy = [...items];
+    cartCopy = cartCopy.filter((item, index) => index != id);
+    setItems(cartCopy);
+    setToLocalStorage(cartCopy);
+    window.location.reload(false);
   };
 
   //   clear all items in cart
   const clearCart = () => {
     setItems([]);
+    setToLocalStorage(items);
   };
 
   const vals = {

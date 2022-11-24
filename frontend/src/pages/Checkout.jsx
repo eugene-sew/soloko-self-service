@@ -87,21 +87,11 @@ const Checkout = () => {
               deleteText="Remove"
               rtl={false}
               className="min-h-[111px] rounded-lg px-0"
-              onDeleteConfirm={(onSuccess, onCancel) => {
-                if (
-                  window.confirm("Do you really want to delete this item ?")
-                ) {
-                  onSuccess();
-                } else {
-                  onCancel();
-                }
-              }}
             >
               <li
                 className={`grid grid-cols-12 ${
                   item.qty <= 0 ? "bg-gray-200" : "bg-white"
                 } gap-2  shadow-lg rounded-md overflow-hidden pt-2 h-28 grid-rows-6`}
-                key={index}
               >
                 <div className="col-span-12 grid grid-cols-12 px-2 place-items-center gap-2 h-full row-span-5">
                   <img
