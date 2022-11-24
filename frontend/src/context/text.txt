@@ -1,0 +1,138 @@
+import axios from "axios";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
+const AuthContext = createContext();
+
+export function useAuth() {
+  return useContext(AuthContext);
+}
+
+export function AuthProvider({ children }) {
+  const [currentUser, setCurrentUser] = useState(null);
+  const [userData, setUserData] = useState(null);
+  const [loggedOut, setLoggedOut] = useState(true);
+
+  const [loading, setLoading] = useState(true);
+  const [token, setToken] = useState(null);
+  const formData = new FormData();
+
+  const profileUrl = process.env.REACT_APP_PROFILE_URL;
+
+  const navigate = useNavigate();
+
+  const setUserStorage = (user) => {
+    window.sessionStorage.setItem("user", JSON.stringify(user));
+  };
+
+  const setUserDataStorage = (data) => {
+    window.sessionStorage.setItem("user-data", JSON.stringify(data));
+  };
+
+  useEffect(() => {
+    let mounted = true;
+    mounted &&
+      setUserData(JSON.parse(window.sessionStorage.getItem("user-data")));
+
+    return () => (mounted = false);
+  }, []);
+
+  useEffect(() => {
+    let mounted = true;
+    if (mounted) {
+      setLoading(false);
+      setUserStorage(currentUser);
+      setUserDataStorage(userData);
+      console.log("mounted");
+    }
+    // console.log(userData);
+    return () => (mounted = !mounted);
+  }, []);
+
+  // check if a string is an email or not
+  const validateEmail = (email) => {
+    return email.match(
+      /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+  };
+
+  //   login function here
+  const login = async (username, password) => {
+    const url = process.env.REACT_APP_LOGIN;
+
+    if (validateEmail(username)) {
+      formData.append("email", username);
+      formData.append("password", password);
+      console.log(username + " is an email");
+    } else {
+      formData.append("username", username);
+      formData.append("password", password);
+      console.log(username + " is a username");
+    }
+
+    await axios
+      .post(url, formData, {
+        // timeout: 40000,
+        headers: {
+          "content-type": "multipart/form-data",
+        },
+      })
+      .then(async (res) => {
+        if (res.data.message) {
+          toast.error(res.data.message);
+        } else {
+          toast.success("Login Success");
+          setCurrentUser(res.data.user);
+          setLoading(false);
+          setToken(`Token ${res.data.token}`);
+          await fetchUserCompleteData(res.data.user.id);
+          console.log({ userData });
+          setUserDataStorage(userData);
+          navigate("/dashboard");
+          return true;
+        }
+      })
+      .catch((err) => {
+        toast.error("error occoured \n " + err);
+        console.log(err.response);
+      });
+  };
+
+  const fetchUserCompleteData = async (id) => {
+    await axios
+      .get(profileUrl + `${id}`, {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((res) => {
+        const profile = res.data;
+        setUserData(profile);
+      });
+  };
+
+  // logOut function here
+  const logout = () => {
+    setCurrentUser(null);
+    setUserData(null);
+    setToken(null);
+    sessionStorage.clear();
+    console.log("Log out");
+    setLoading(false);
+  };
+
+  const value = {
+    userData,
+    currentUser,
+    login,
+    logout,
+    token,
+  };
+
+  return (
+    <AuthContext.Provider value={value}>
+      {!loading && children}
+    </AuthContext.Provider>
+  );
+}
