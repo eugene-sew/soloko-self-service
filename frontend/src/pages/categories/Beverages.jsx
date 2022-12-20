@@ -1,5 +1,21 @@
+import { useLoaderData } from "react-router-dom";
+import { Meal } from "../../components";
+import FeaturedMeal from "../../components/FeaturedMeal";
+import Meals from "../../components/Meals";
+import { getCategoryBasedMeals } from "../../util/api";
+
 const Beverages = () => {
-  return <div>Beverages</div>;
+  const loaderData = useLoaderData();
+  const meals = loaderData.data.attributes.meals.data;
+  return (
+    <div className={`w-full h-full grid`}>
+      <Meals meals={meals} />
+    </div>
+  );
 };
 
 export default Beverages;
+
+export function beverageLoader() {
+  return getCategoryBasedMeals(13);
+}

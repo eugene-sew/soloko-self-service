@@ -1,17 +1,23 @@
-import ProgressBar from "@ramonak/react-progress-bar";
 import { Link, useNavigate } from "react-router-dom";
 import SwipeToDelete from "react-swipe-to-delete-ios";
 import "react-swipeable-list/dist/styles.css";
 import { useCart } from "../context/cart";
 import trash from "../assets/icons/trash.svg";
 import foot from "../assets/footer.png";
+import logo from "../assets/logo.png";
 import { useEffect, useState } from "react";
+import { useOrder } from "../context/order";
 
 const Checkout = () => {
   const { items, updateCartItem, removeFromCart } = useCart();
   const [currentItems, setCurrentItems] = useState([]);
   const [width, setWidth] = useState(0);
+  const [timeSet, setTimeSet] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [cancelled, setCancelled] = useState(false);
   const navigate = useNavigate();
+  const { addToOrder } = useOrder();
+
   useEffect(() => {
     let mounted = true;
     mounted && setCurrentItems(items);
@@ -32,28 +38,77 @@ const Checkout = () => {
     const percent = val / 100;
     return percent;
   };
-  const timer = () => {
-    var start = 300000;
-    // var start = 10000;
 
-    setInterval(() => {
-      if (start > 0) {
-        setWidth(getPercent(start));
-        start -= 1000;
+  const startMinutes = 1;
+  let time = startMinutes * 60;
+
+  const cancelOrder = () => {
+    setCancelled(true);
+    setShowModal(false);
+  };
+
+  const addToOrderHandler = () => {
+    addToOrder(JSON.stringify(currentItems));
+  };
+
+  const updateCountDown = () => {
+    const t = setInterval(() => {
+      if (cancelled) {
+        clearInterval(t);
+        return;
+      }
+      const minutes = Math.floor(time / 60);
+      const seconds = time % 60;
+      setTimeSet(`${parseInt(minutes)}:${parseInt(seconds)}`);
+      setWidth(Math.floor(time / 3));
+      time--;
+      if (minutes === 0 && seconds === 0) {
+        clearInterval(t);
+        addToOrderHandler();
+        window.localStorage.removeItem("items");
+        navigate("/order");
       }
     }, 1000);
   };
-
+  // console.log(timeSet);
   const navigationHandler = () => {
-    navigate("/payment");
+    setCancelled(false);
+    setShowModal(!showModal);
+    // updateCountDown();
   };
-  console.log(width);
+
+  const backNavigationHandler = () => {
+    navigate(-1);
+  };
+
+  const skipHandler = () => {
+    addToOrderHandler();
+    window.localStorage.removeItem("items");
+    navigate("/order");
+  };
+
   return (
     <div className="px-2 grid grid-rows-6 h-screen gap-2 pt-2 pb-5 bg-white relative">
-      <div className={`w-full bg-green-400 h-2 absolute`}>
-        {/* <ProgressBar completed={300000} /> */}
-      </div>
       <div className="row-span-1  h-full w-full content-center mt-5 px-2">
+        <button
+          className="flex flex-row items-center text-blue-600"
+          onClick={backNavigationHandler}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            aria-hidden="true"
+            className="w-5 h-5 "
+          >
+            <path
+              fillRule="evenodd"
+              d="M7.72 12.53a.75.75 0 010-1.06l7.5-7.5a.75.75 0 111.06 1.06L9.31 12l6.97 6.97a.75.75 0 11-1.06 1.06l-7.5-7.5z"
+              clipRule="evenodd"
+            />
+          </svg>
+          <h1>Go Back</h1>
+        </button>
         <h1 className="text-3xl font-semibold text-orange-600">
           Confirm your order
         </h1>
@@ -77,8 +132,8 @@ const Checkout = () => {
 
           {currentItems.map((item, index) => (
             <SwipeToDelete
-              onDelete={() => removeFromCart(index)}
-              key={index}
+              onDelete={() => removeFromCart(item.id)}
+              key={item.id}
               transitionDuration={250}
               deleteWidth={70}
               deleteThreshold={50}
@@ -87,6 +142,15 @@ const Checkout = () => {
               deleteText="Remove"
               rtl={false}
               className="min-h-[111px] rounded-lg px-0"
+              onDeleteConfirm={(onSuccess, onCancel) => {
+                if (
+                  window.confirm("Do you really want to remove from plate?")
+                ) {
+                  onSuccess();
+                } else {
+                  onCancel();
+                }
+              }}
             >
               <li
                 className={`grid grid-cols-12 ${
@@ -100,8 +164,8 @@ const Checkout = () => {
                     className="w-full h-full object-cover col-span-3 rounded-lg "
                   />
                   <h1 className="col-span-5 flex font-bold">{item.name}</h1>
-                  <div className="col-span-4 grid grid-cols-4 ">
-                    <div className="col-span-3 flex flex-row items-center">
+                  <div className="col-span-4 grid grid-cols-4 gap-2">
+                    <div className="col-span-2 flex flex-row items-center gap-2">
                       <h1 className="w-5 outline-none text-center">
                         {item.qty}
                       </h1>
@@ -109,9 +173,7 @@ const Checkout = () => {
                         <button
                           className="font-semibold flex items-center bg-white "
                           onClick={() => {
-                            // item.qty += 1;
-                            // console.log(item.qty);
-                            updateCartItem(item.name, 1);
+                            updateCartItem(item.id, 1);
                           }}
                         >
                           <svg
@@ -130,7 +192,7 @@ const Checkout = () => {
 
                         <button
                           className="font-semibold bg-white w-full text-center disabled:bg-gray-600"
-                          onClick={() => updateCartItem(item.name, -1)}
+                          onClick={() => updateCartItem(item.id, -1)}
                           disabled={item.qty <= 0 && trash}
                         >
                           <svg
@@ -149,7 +211,7 @@ const Checkout = () => {
                       </div>
                     </div>
 
-                    <h1 className="flex items-center">
+                    <h1 className="flex items-center col-span-2">
                       {getIndiTotal(item.qty, item.price)}
                     </h1>
                   </div>
@@ -157,21 +219,6 @@ const Checkout = () => {
                 <div className="col-span-12 bg-red-600 w-full h-2">
                   <img src={foot} alt="footer image" className="w-full" />
                 </div>
-                {/* <button className="col-span-12">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="red"
-                  aria-hidden="true"
-                  className="bg-red=600"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </button> */}
               </li>
             </SwipeToDelete>
           ))}
@@ -189,11 +236,34 @@ const Checkout = () => {
         <div className="px-4 mt-3 text-sm">
           by tapping on the order button, you have 5 minutes to cancel the
           order. Tap on skip to skip the wait...
-          <Link className="font-bold text-blue-500 text-base" to={"/payment"}>
+          <Link className="font-bold text-blue-500 text-base" to={"/order"}>
             skip
           </Link>
         </div>
       </div>
+      {showModal && (
+        <>
+          <div className="absolute top-0 bottom-0 right-0 left-0 bg-black bg-opacity-80 grid place-items-center">
+            <div className="bg-white text-6xl font-bold rounded-lg shadow-lg text-gray-600 flex items-center justify-center h-40 w-56 tracking-wider ">
+              {timeSet}
+            </div>
+            <div className="flex gap-5 items-center">
+              <button
+                className="font-bold text-blue-500 text-base bg-white px-4 py-3 rounded shadow"
+                onClick={() => cancelOrder()}
+              >
+                Update Order
+              </button>
+              <button
+                className="font-bold text-white text-base bg-orange-600 px-3 py-3 rounded shadow "
+                onClick={skipHandler}
+              >
+                I know what I want,skip wait
+              </button>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import rice from "../assets/rice.png";
 import clock from "../assets/clock.svg";
 import { useLayout } from "../context/layout";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useCart } from "../context/cart";
 
 const Card = ({ image, name, price, time, additional }) => {
@@ -24,15 +24,33 @@ const Card = ({ image, name, price, time, additional }) => {
         className="buy text-center font-bold text-lg text-white w-full p-2 rounded"
         onClick={() => addToCart(name, image, 1, price)}
       >
-        Add to Basket
+        Add to Plate
       </button>
     </div>
   );
 };
 
-const List = ({ image, name, price, time, additional }) => {
+const List = ({ m_id, image, name, price, time, additional }) => {
   const [qty, setQty] = useState(1);
-  const { addToCart } = useCart();
+  const [added, setAdded] = useState(false);
+  const [isThere, setIsThere] = useState([]);
+  const { addToCart, items } = useCart();
+
+  useEffect(() => {
+    let mounted = true;
+    setIsThere(
+      items.find((item) => item.name.toLowerCase().includes(name.toLowerCase()))
+    );
+    return () => (mounted = false);
+  }, [items]);
+
+  const addToCartHandler = (e) => {
+    e.preventDefault();
+    addToCart(m_id, name, image, qty, price);
+    setQty(1);
+    setAdded(true);
+  };
+  // console.log(m_id);
   return (
     <div className="w-full h-fit rounded-lg shadow-lg overflow-hidden relative grid grid-cols-12 py-4 px-2 bg-white gap-5">
       <img
@@ -47,10 +65,10 @@ const List = ({ image, name, price, time, additional }) => {
         <div className="grid grid-cols-12 items-center gap-4">
           <div className="col-span-4 flex flex-row">
             <button
-              className="font-bold text-black w-full text-center"
-              onClick={() => setQty(qty + 1)}
+              className="font-bold text-black w-full text-center text-2xl"
+              onClick={() => setQty(qty > 1 ? qty - 1 : 1)}
             >
-              +
+              -
             </button>
             <input
               type="number"
@@ -59,26 +77,38 @@ const List = ({ image, name, price, time, additional }) => {
               value={qty}
               onChange={() => setQty(qty)}
             />
+
             <button
               className="font-bold text-black w-full text-center"
-              onClick={() => setQty(qty > 1 ? qty - 1 : 1)}
+              onClick={() => setQty(qty + 1)}
             >
-              -
+              +
             </button>
           </div>
-          <button
-            className="px-2 py-2 bg-orange-600 text-white font-semibold rounded-md shadow col-span-8"
-            onClick={() => addToCart(name, image, qty, price)}
-          >
-            Add to Plate
-          </button>
+          {!isThere ? (
+            <button
+              className="px-2 py-2 bg-orange-600 text-white font-semibold rounded-md shadow col-span-8"
+              onClick={addToCartHandler}
+            >
+              Add to Plate
+            </button>
+          ) : (
+            <button
+              className="px-2 py-2 bg-orange-700 text-white font-semibold rounded-md shadow col-span-8"
+              onClick={addToCartHandler}
+            >
+              {isThere && isThere.qty > 1
+                ? isThere.qty + " in Basket"
+                : isThere.qty + " on plate"}
+            </button>
+          )}
         </div>
       </div>
     </div>
   );
 };
 
-const Meal = ({ image, name, price, time, additional }) => {
+const Meal = ({ id, image, name, price, time, additional }) => {
   const { layout } = useLayout();
 
   return (
@@ -92,6 +122,7 @@ const Meal = ({ image, name, price, time, additional }) => {
           price={price}
           time={time}
           additional={additional}
+          m_id={id}
         />
       )}
     </>

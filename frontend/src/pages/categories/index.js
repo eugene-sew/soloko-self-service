@@ -1,29 +1,43 @@
-import Breakfast from "./Breakfast";
-import Beverages from "./Beverages";
-import Bites from "./Bites";
-import Cocktail from "./Cocktail";
-import LocalDrink from "./LocalDrink";
-import Main from "./Main";
-import Salads from "./Salads";
-import Sandwiches from "./Sandwiches";
-import Sides from "./Sides";
-import Smoothies from "./Smoothies";
-import Sweets from "./Sweets";
-import Fish from "./Fish";
-import HotBev from "./HotBev";
+import Breakfast, { breakfastLoader } from "./Breakfast";
+import Beverages, { beverageLoader } from "./Beverages";
+import Bites, { bitesLoader } from "./Bites";
+import Cocktail, { cocktailLoader } from "./Cocktail";
+import LocalDrink, { localDrinkLoader } from "./LocalDrink";
+import Main, { localMainLoader } from "./Main";
+import Salads, { saladLoader } from "./Salads";
+import Sandwiches, { sandLoader } from "./Sandwiches";
+import Sides, { sideLoader } from "./Sides";
+import Smoothies, { smootieLoader } from "./Smoothies";
+import Sweets, { sweetsLoader } from "./Sweets";
+import Fish, { fishLoader } from "./Fish";
+import HotBev, { hotLoader } from "./HotBev";
+import OrderPage from "../staff/OrderPage";
 
 export {
   Breakfast,
+  breakfastLoader,
   Beverages,
+  beverageLoader,
   Bites,
+  bitesLoader,
   Cocktail,
+  cocktailLoader,
   LocalDrink,
+  localDrinkLoader,
   Main,
+  localMainLoader,
   Salads,
+  saladLoader,
   Sandwiches,
+  sandLoader,
   Sides,
+  sideLoader,
   Smoothies,
+  smootieLoader,
   Sweets,
+  sweetsLoader,
   Fish,
+  fishLoader,
   HotBev,
+  hotLoader,
 };

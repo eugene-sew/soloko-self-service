@@ -1,3 +1,6 @@
+* {
+  outline: none;
+}
 .hide::-webkit-scrollbar {
   display: none;
 }
@@ -25,4 +28,26 @@ input::-webkit-inner-spin-button {
 /* Firefox */
 input[type="number"] {
   -moz-appearance: textfield;
+}
+
+.lgp {
+  background: url(assets/login.jpeg);
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.lgp::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 100vh;
+  background-color: #000000;
+  opacity: 0.3;
+}
+
+.glass {
+  backdrop-filter: blur(20px);
 }

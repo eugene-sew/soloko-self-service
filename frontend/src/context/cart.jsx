@@ -29,8 +29,7 @@ export function CartProvider({ children }) {
     return () => (mounted = false);
   }, []);
 
-  //   add id later
-  const addToCart = (name, image, qty, price) => {
+  const addToCart = (id, name, image, qty, price) => {
     // const itemStatus = items.find((data) =>
     //   data.name.toLowerCase().includes(name.toLowerCase())
     // );
@@ -38,30 +37,26 @@ export function CartProvider({ children }) {
     //   ? updateCartItem(name, qty)
     //   : setItems((prev) => [...prev, { name, image, qty, price }]);
     let cartCopy = [...items];
-    let existingItem = cartCopy.find((cartItem) =>
-      cartItem.name.toLowerCase().includes(name.toLowerCase())
-    );
+    let existingItem = cartCopy.find((cartItem) => cartItem.id == id);
     existingItem
       ? (existingItem.qty += qty)
       : //if item doesn't exist, simply add it
-        cartCopy.push({ name, image, qty, price });
+        cartCopy.push({ id, name, image, qty, price });
     setItems(cartCopy);
     setToLocalStorage(cartCopy);
   };
 
   // const confirmOrder
 
-  const updateCartItem = (name, qty) => {
+  const updateCartItem = (id, qty) => {
     // find the item
-    const item = items.filter((data) =>
-      data.name.toLowerCase().includes(name.toLowerCase())
-    );
+    const item = items.filter((data) => data.id == id);
 
     // get index of item
-    const id = items.indexOf(item[0]);
+    const ind = items.indexOf(item[0]);
     // perform arithmetic update
 
-    items[id].qty += qty;
+    items[ind].qty += qty;
     // setback into state
     setItems((prev) => [...prev]);
     setToLocalStorage(items);
@@ -71,10 +66,10 @@ export function CartProvider({ children }) {
   const removeFromCart = (id) => {
     // setItems([...items.slice(0, id), ...items.slice(id + 1)]);
     let cartCopy = [...items];
-    cartCopy = cartCopy.filter((item, index) => index != id);
+    cartCopy = cartCopy.filter((item) => item.id != id);
     setItems(cartCopy);
     setToLocalStorage(cartCopy);
-    window.location.reload(false);
+    // window.location.reload(false);
   };
 
   //   clear all items in cart

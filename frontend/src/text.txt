@@ -1,0 +1,23 @@
+    <h1 className="px-2 py-2 shadow rounded bg-gray-100 text-black cursor-pointer w-fit h-fit whitespace-nowrap">
+          Order Type <br /> <span> {info?.attributes?.service_type}</span>
+        </h1>
+        <h1
+          className={`px-2 py-2 shadow-lg rounded-lg ${
+            info?.attributes?.preparation_status
+              .toLowerCase()
+              .includes("request")
+              ? "bg-orange-500 text-white"
+              : "bg-gray-100 text-black"
+          } cursor-pointer whitespace-nowrap`}
+        >
+          Order Status <br />
+          <span> {info?.attributes?.preparation_status}</span>
+        </h1>
+        <h1 className="px-2 py-2  shadow rounded bg-gray-100 text-black  cursor-pointer w-fit h-fit whitespace-nowrap">
+          Payment Mode:
+          <br /> <span>{info?.attributes?.payment_method}</span>
+        </h1>
+        <h1 className="px-2 py-2 shadow rounded bg-gray-100 text-black  cursor-pointer w-fit h-fit whitespace-nowrap">
+          Paid:
+          <br /> <span> {info?.attributes?.paid ? "Yes" : "Not yet"}</span>
+        </h1>

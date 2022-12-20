@@ -8,7 +8,7 @@ import { useCart } from "../context/cart";
 const Header = () => {
   const { items } = useCart();
   return (
-    <div className="w-full shadow fixed pt-3 z-50 bg-white h-fit grid rounded-b-lg overflow-hidden px-3">
+    <div className="w-full shadow fixed pt-3 z-50 bg-white grid rounded-b-lg overflow-hidden px-3">
       <div className="flex justify-between items-center">
         <h1 className="text-orange-500 font-bold px-3 flex text-2xl ">
           Soloko self-center
@@ -26,20 +26,6 @@ const Header = () => {
           {categories.map((category, index) => (
             <NavLink
               to={category.link}
-              // className={({ isActive }) =>
-              //   `${
-              //     isActive
-              //       ? "bg-orange-500 text-white"
-              //       : "bg-gray-200 text-black"
-              //   } h-fit py-2 px-2 rounded-full w-min whitespace-nowrap flex flex-row items-center`
-              // }
-              // className={({ isActive }) =>
-              //   `${
-              //     isActive
-              //       ? "underline text-orange-500 underline-offset-4 transition duration-150 ease-in-out font-bold"
-              //       : " text-black"
-              //   } h-fit py-2 px-2 rounded-full w-min whitespace-nowrap flex flex-row items-center`
-              // }
               className={({ isActive }) =>
                 `${
                   isActive

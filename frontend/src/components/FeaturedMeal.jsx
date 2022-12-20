@@ -5,7 +5,7 @@ const FeaturedMeal = ({ image, time }) => {
   return (
     <div className="mt-5">
       <h1 className="font-bold text-2xl mod opacity-80">Featured Meal</h1>
-      <div className="w-full h-44 rounded-lg shadow-lg overflow-hidden relative mt-2">
+      <div className="w-full h-44 rounded-lg shadow-lg overflow-hidden relative mt-5">
         <img
           src={image}
           alt="featured meal"

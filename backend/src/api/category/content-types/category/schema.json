@@ -1,0 +1,28 @@
+{
+  "kind": "collectionType",
+  "collectionName": "categories",
+  "info": {
+    "singularName": "category",
+    "pluralName": "categories",
+    "displayName": "category",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "category": {
+      "type": "string"
+    },
+    "meals": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::meal.meal",
+      "mappedBy": "category"
+    },
+    "desc": {
+      "type": "text"
+    }
+  }
+}

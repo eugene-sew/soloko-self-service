@@ -4,7 +4,7 @@ import { Outlet } from "react-router-dom";
 
 const FullMenu = () => {
   return (
-    <div className="w-full h-full bg-gray-100 grid">
+    <div className="w-full h-full bg-gray-100 grid sm:hidden">
       <Header />
       <main className="mt-32 pt-2 px-2 h-full pb-10">
         <Outlet />
