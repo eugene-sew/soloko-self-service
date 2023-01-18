@@ -11,7 +11,14 @@ import "./index.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import { Checkout, Error, FullMenu, OrderListPage, Starter } from "./pages";
+import {
+  Checkout,
+  Error,
+  FullMenu,
+  OrderListPage,
+  Reciept,
+  Starter,
+} from "./pages";
 import {
   Beverages,
   Bites,
@@ -158,11 +165,11 @@ function App() {
       element: <OrderListPage />,
       errorElement: <Error />,
     },
-    // {
-    //   path: "payment",
-    //   element: <Payment />,
-    //   errorElement: <Error />,
-    // },
+    {
+      path: "/reciept",
+      element: <Reciept />,
+      errorElement: <Error />,
+    },
     {
       path: "staff/login",
       element: <Login />,
@@ -177,7 +184,6 @@ function App() {
             {
               path: "orders",
               element: <Orders />,
-              loader: ordersLoader,
               errorElement: <Error />,
               children: [
                 {

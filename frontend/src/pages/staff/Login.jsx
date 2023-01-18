@@ -16,7 +16,11 @@ const Login = () => {
         onSubmit={loginHandler}
       >
         <div className="grid place-items-center ">
-          <img src={logo} alt="logo" className="w-12 h-12" />
+          <img
+            src={logo}
+            alt="logo"
+            className="w-12 h-12"
+          />
           <h1 className="font-bold  text-2xl text-center tracking-widest">
             Soloko
             <br /> Cafe
@@ -31,12 +35,17 @@ const Login = () => {
             ref={usernameRef}
             className="w-full h-10 px-3 py-2 rounded-lg shadow-lg placeholder:text-orange-300 outline-none text-orange-500"
             placeholder="staff ID"
+            autoComplete="false"
+            required
+            name="username"
           />
           <input
-            type="text"
+            type="password"
             ref={passwordRef}
             className="w-full h-10 px-3 py-2 rounded-lg shadow-lg placeholder:text-orange-300 outline-none text-orange-500"
             placeholder="password"
+            autoComplete="false"
+            required
           />
           <button
             className="bg-orange-600 text-white font-semibold w-full px-2 py-2 rounded-lg shadow-lg "

@@ -51,30 +51,30 @@ const Checkout = () => {
     addToOrder(JSON.stringify(currentItems));
   };
 
-  const updateCountDown = () => {
-    const t = setInterval(() => {
-      if (cancelled) {
-        clearInterval(t);
-        return;
-      }
-      const minutes = Math.floor(time / 60);
-      const seconds = time % 60;
-      setTimeSet(`${parseInt(minutes)}:${parseInt(seconds)}`);
-      setWidth(Math.floor(time / 3));
-      time--;
-      if (minutes === 0 && seconds === 0) {
-        clearInterval(t);
-        addToOrderHandler();
-        window.localStorage.removeItem("items");
-        navigate("/order");
-      }
-    }, 1000);
-  };
+  // const updateCountDown = () => {
+  //   const t = setInterval(() => {
+  //     if (cancelled) {
+  //       clearInterval(t);
+  //       return;
+  //     }
+  //     const minutes = Math.floor(time / 60);
+  //     const seconds = time % 60;
+  //     setTimeSet(`${parseInt(minutes)}:${parseInt(seconds)}`);
+  //     setWidth(Math.floor(time / 3));
+  //     time--;
+  //     if (minutes === 0 && seconds === 0) {
+  //       clearInterval(t);
+  //       addToOrderHandler();
+  //       window.localStorage.removeItem("items");
+  //       navigate("/order");
+  //     }
+  //   }, 1000);
+  // };
   // console.log(timeSet);
   const navigationHandler = () => {
     setCancelled(false);
     setShowModal(!showModal);
-    // updateCountDown();
+    updateCountDown();
   };
 
   const backNavigationHandler = () => {
@@ -89,7 +89,7 @@ const Checkout = () => {
 
   return (
     <div className="px-2 grid grid-rows-6 h-screen gap-2 pt-2 pb-5 bg-white relative">
-      <div className="row-span-1  h-full w-full content-center mt-5 px-2">
+      <div className="row-span-1  h-full w-full content-center mt-5 px-2 md:hidden">
         <button
           className="flex flex-row items-center text-blue-600"
           onClick={backNavigationHandler}
@@ -109,10 +109,13 @@ const Checkout = () => {
           </svg>
           <h1>Go Back</h1>
         </button>
-        <h1 className="text-3xl font-semibold text-orange-600">
+        <h1 className="text-3xl font-semibold text-orange-600 md:hidden">
           Confirm your order
         </h1>
-        <h2 className="text-sm text-gray-600 px-2 italic">
+        <h1 className="text-3xl font-semibold text-orange-600 md:hidden">
+          My Basket
+        </h1>
+        <h2 className="text-sm text-gray-600 px-2 italic md:hidden">
           sit back,confirm your order and relax as we fix you a special
         </h2>
       </div>
@@ -144,7 +147,7 @@ const Checkout = () => {
               className="min-h-[111px] rounded-lg px-0"
               onDeleteConfirm={(onSuccess, onCancel) => {
                 if (
-                  window.confirm("Do you really want to remove from plate?")
+                  window.confirm("Do you really want to remove from basket?")
                 ) {
                   onSuccess();
                 } else {
@@ -217,7 +220,11 @@ const Checkout = () => {
                   </div>
                 </div>
                 <div className="col-span-12 bg-red-600 w-full h-2">
-                  <img src={foot} alt="footer image" className="w-full" />
+                  <img
+                    src={foot}
+                    alt="footer image"
+                    className="w-full"
+                  />
                 </div>
               </li>
             </SwipeToDelete>
@@ -236,7 +243,10 @@ const Checkout = () => {
         <div className="px-4 mt-3 text-sm">
           by tapping on the order button, you have 5 minutes to cancel the
           order. Tap on skip to skip the wait...
-          <Link className="font-bold text-blue-500 text-base" to={"/order"}>
+          <Link
+            className="font-bold text-blue-500 text-base"
+            to={"/order"}
+          >
             skip
           </Link>
         </div>
@@ -247,18 +257,18 @@ const Checkout = () => {
             <div className="bg-white text-6xl font-bold rounded-lg shadow-lg text-gray-600 flex items-center justify-center h-40 w-56 tracking-wider ">
               {timeSet}
             </div>
-            <div className="flex gap-5 items-center">
+            <div className="flex gap-5 items-center md:px-10">
               <button
-                className="font-bold text-blue-500 text-base bg-white px-4 py-3 rounded shadow"
+                className="font-bold text-blue-500 text-base bg-white p-2 rounded shadow"
                 onClick={() => cancelOrder()}
               >
                 Update Order
               </button>
               <button
-                className="font-bold text-white text-base bg-orange-600 px-3 py-3 rounded shadow "
+                className="font-bold text-white text-base bg-orange-600 p-2 rounded shadow ml-3"
                 onClick={skipHandler}
               >
-                I know what I want,skip wait
+                Complete Order
               </button>
             </div>
           </div>

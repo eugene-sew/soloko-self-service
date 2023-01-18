@@ -12,11 +12,6 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "Order": {
-      "type": "string",
-      "unique": true,
-      "required": true
-    },
     "preparation_status": {
       "type": "enumeration",
       "enum": [

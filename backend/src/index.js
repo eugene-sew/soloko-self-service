@@ -1,20 +1,26 @@
-'use strict';
+"use strict";
 
 module.exports = {
-  /**
-   * An asynchronous register function that runs before
-   * your application is initialized.
-   *
-   * This gives you an opportunity to extend code.
-   */
   register(/*{ strapi }*/) {},
 
-  /**
-   * An asynchronous bootstrap function that runs before
-   * your application gets started.
-   *
-   * This gives you an opportunity to set up your data model,
-   * run jobs, or perform some special logic.
-   */
-  bootstrap(/*{ strapi }*/) {},
+  bootstrap({ strapi }) {
+    let { Server } = require("socket.io");
+    let io = new Server(strapi.server.httpServer, {
+      cors: {
+        origin: "*",
+        methods: ["GET", "POST"],
+        credentials: true,
+      },
+    });
+
+    strapi.io = io;
+
+    io.on("connection", (socket) => {
+      console.log(socket.id);
+      socket.on("new_order", (data) => {
+        console.log(data);
+        socket.broadcast.emit("received_order", data);
+      });
+    });
+  },
 };

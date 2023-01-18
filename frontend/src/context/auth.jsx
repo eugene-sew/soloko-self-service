@@ -1,5 +1,6 @@
 import axios from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 // import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext();
@@ -54,7 +55,7 @@ export function AuthProvider({ children }) {
         setToLocalStorage(res.data.user);
         setUser(res.data?.user);
       })
-      .catch((err) => console.error(err));
+      .catch((err) => toast.error(err.response.data.error.message));
 
     // setUser(response);
 

@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "2022-12-15T18:23:15.221Z"
+    "x-generation-date": "2023-01-18T05:01:21.335Z"
   },
   "x-strapi-config": {
     "path": "/documentation",
@@ -16081,14 +16081,9 @@
         ],
         "properties": {
           "data": {
-            "required": [
-              "Order"
-            ],
+            "required": [],
             "type": "object",
             "properties": {
-              "Order": {
-                "type": "string"
-              },
               "preparation_status": {
                 "type": "string",
                 "enum": [
@@ -16139,9 +16134,6 @@
           "attributes": {
             "type": "object",
             "properties": {
-              "Order": {
-                "type": "string"
-              },
               "preparation_status": {
                 "type": "string",
                 "enum": [
@@ -16238,9 +16230,6 @@
           "attributes": {
             "type": "object",
             "properties": {
-              "Order": {
-                "type": "string"
-              },
               "preparation_status": {
                 "type": "string",
                 "enum": [
@@ -16370,9 +16359,6 @@
           "attributes": {
             "type": "object",
             "properties": {
-              "Order": {
-                "type": "string"
-              },
               "preparation_status": {
                 "type": "string",
                 "enum": [
@@ -16469,9 +16455,6 @@
           "attributes": {
             "type": "object",
             "properties": {
-              "Order": {
-                "type": "string"
-              },
               "preparation_status": {
                 "type": "string",
                 "enum": [
@@ -17617,7 +17600,7 @@
           "qty": {
             "type": "integer"
           },
-          "price": {
+          "sub_total": {
             "type": "number",
             "format": "float"
           }

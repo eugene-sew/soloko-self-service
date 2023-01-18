@@ -4,5 +4,6 @@ import Error from "./Error";
 import Checkout from "./Checkout";
 // import Payment from "./Payment";
 import OrderListPage from "./OrderListPage";
+import Reciept from "./Reciept";
 
-export { Starter, FullMenu, Error, Checkout, OrderListPage };
+export { Starter, FullMenu, Error, Checkout, OrderListPage, Reciept };

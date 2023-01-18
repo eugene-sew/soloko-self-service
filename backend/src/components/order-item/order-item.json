@@ -15,7 +15,7 @@
     "qty": {
       "type": "integer"
     },
-    "price": {
+    "sub_total": {
       "type": "decimal"
     }
   }

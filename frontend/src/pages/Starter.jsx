@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import logo from "../assets/food.png";
 const Starter = () => {
   return (
-    <div className="w-full h-screen bg-white grid grid-rows-6 px-5 sm:hidden">
+    <div className="w-full h-screen bg-white grid grid-rows-6 px-5 ">
       <div className="text-center row-span-1">
         <h1 className="text-orange-500 font-bold text-4xl mt-5 justify-center">
           Soloko Self Center

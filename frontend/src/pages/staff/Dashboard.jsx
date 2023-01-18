@@ -14,7 +14,11 @@ const Dashboard = () => {
         <div className="bg-white h-full w-full rounded-lg shadow-lg backdrop-filter bg-opacity-50 bg-clip-padding flex flex-col justify-between">
           <div className="grid gap-10">
             <div className="grid place-items-center ">
-              <img src={logo} alt="logo" className="w-24 h-24" />
+              <img
+                src={logo}
+                alt="logo"
+                className="w-24 h-24"
+              />
               <h1 className="font-bold  text-2xl text-center tracking-widest">
                 Soloko Cafe
               </h1>
@@ -51,7 +55,7 @@ const Dashboard = () => {
         </div>
       </div>
       <div className="col-span-12 md:col-span-10 w-full px-2 md:px-5 pt-6 bg-orange-600 h-screen overflow-hidden">
-        <div className="bg-white w-full h-full rounded-t-lg px-3">
+        <div className="bg-white w-full h-full rounded-t-lg ">
           <Outlet />
         </div>
       </div>

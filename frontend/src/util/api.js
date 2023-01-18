@@ -1,4 +1,5 @@
 import axios from "axios";
+import { toast } from "react-toastify";
 import { categories } from "../components/data";
 import { useAuth } from "../context/auth";
 
@@ -22,18 +23,21 @@ export async function getMeal(id) {
 
 // create order, applies to customers only but accessible by admin/staff
 export async function createOrder({ data }) {
-  const response = await fetch(import.meta.env.VITE_APP_MAKE_ORDER, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  });
+  // const response = await fetch(import.meta.env.VITE_APP_ORDER, {
+  //   method: "POST",
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //   },
+  //   body: JSON.stringify(data),
+  // });
 
-  if (!response.ok) {
-    throw { message: "could not pst order" };
-  }
-  return response.json();
+  // if (!response.ok) {
+  //   console.log(response);
+  //   toast.error(response.statusText);
+  //   throw { message: "could not pst order" };
+  // }
+  // return response.json();
+
 }
 
 // get a specific order by id , applies to staff only

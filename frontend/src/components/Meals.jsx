@@ -3,9 +3,11 @@ import Meal from "./Meal";
 
 const Meals = ({ meals }) => {
   const featured = meals.filter((meal) => {
-    return meal.attributes.featured === true;
-  });
-  console.log(featured);
+    return meal.attributes.featured === true; 
+});
+
+  // console.log(featured);
+
   return (
     <div className={`w-full h-full grid`}>
       <FeaturedMeal
@@ -15,9 +17,9 @@ const Meals = ({ meals }) => {
         time={"5"}
       />
 
-      <div className={`grid gap-4 pb-10 h-full `}>
+      <div className={`grid gap-4 pb-10 h-full md:mt-5`}>
         {meals &&
-          meals.map((item, index) => (
+          meals.map((item) => (
             <Meal
               image={`${import.meta.env.VITE_APP_HOST}${
                 item?.attributes.image.data?.attributes.url
