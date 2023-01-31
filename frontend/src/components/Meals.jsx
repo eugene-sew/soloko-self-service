@@ -3,8 +3,8 @@ import Meal from "./Meal";
 
 const Meals = ({ meals }) => {
   const featured = meals.filter((meal) => {
-    return meal.attributes.featured === true; 
-});
+    return meal.attributes.featured === true;
+  });
 
   // console.log(featured);
 

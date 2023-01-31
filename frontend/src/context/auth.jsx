@@ -56,13 +56,6 @@ export function AuthProvider({ children }) {
         setUser(res.data?.user);
       })
       .catch((err) => toast.error(err.response.data.error.message));
-
-    // setUser(response);
-
-    // if (staffID.toLowerCase().includes("admin") && password.includes(1234)) {
-    //   setUser({ name: staffID, login: Date() });
-    //   setToLocalStorage({ name: staffID, login: Date() });
-    // }
   };
 
   const logout = () => {

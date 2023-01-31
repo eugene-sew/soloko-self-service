@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import logo from "../assets/food.png";
+import logo from "../assets/meals/starter.png";
 const Starter = () => {
   return (
     <div className="w-full h-screen bg-white grid grid-rows-6 px-5 ">

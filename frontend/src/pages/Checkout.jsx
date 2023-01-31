@@ -11,6 +11,8 @@ import { useOrder } from "../context/order";
 const Checkout = () => {
   const { items, updateCartItem, removeFromCart } = useCart();
   const [currentItems, setCurrentItems] = useState([]);
+  const [timerOn, setTimerOn] = useState(false);
+  // const [time, setTime] = useState(60);
   const [width, setWidth] = useState(0);
   const [timeSet, setTimeSet] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -39,11 +41,13 @@ const Checkout = () => {
     return percent;
   };
 
-  const startMinutes = 1;
+  const startMinutes = 0.2;
   let time = startMinutes * 60;
 
   const cancelOrder = () => {
-    setCancelled(true);
+    // setCancelled(true);
+    setTimerOn(false);
+    time = 0;
     setShowModal(false);
   };
 
@@ -51,30 +55,33 @@ const Checkout = () => {
     addToOrder(JSON.stringify(currentItems));
   };
 
-  // const updateCountDown = () => {
-  //   const t = setInterval(() => {
-  //     if (cancelled) {
-  //       clearInterval(t);
-  //       return;
-  //     }
-  //     const minutes = Math.floor(time / 60);
-  //     const seconds = time % 60;
-  //     setTimeSet(`${parseInt(minutes)}:${parseInt(seconds)}`);
-  //     setWidth(Math.floor(time / 3));
-  //     time--;
-  //     if (minutes === 0 && seconds === 0) {
-  //       clearInterval(t);
-  //       addToOrderHandler();
-  //       window.localStorage.removeItem("items");
-  //       navigate("/order");
-  //     }
-  //   }, 1000);
-  // };
-  // console.log(timeSet);
+  useEffect(() => {
+    let interval = null;
+    if (timerOn) {
+      interval = setInterval(() => {
+        // setTime((prevTime) => prevTime - 1);
+        const minutes = Math.floor(time / 60);
+        const seconds = time % 60;
+        setTimeSet(`${parseInt(minutes)}:${parseInt(seconds)}`);
+        setWidth(Math.floor(time / 3));
+        time--;
+        if (minutes == 0 && seconds == 0) {
+          clearInterval(interval);
+          addToOrderHandler();
+          window.localStorage.removeItem("items");
+          navigate("/order");
+        }
+      }, 1000);
+    } else {
+      clearInterval(interval);
+    }
+    return () => clearInterval(interval);
+  }, [timerOn]);
+
   const navigationHandler = () => {
     setCancelled(false);
     setShowModal(!showModal);
-    updateCountDown();
+    setTimerOn(true);
   };
 
   const backNavigationHandler = () => {
@@ -82,7 +89,9 @@ const Checkout = () => {
   };
 
   const skipHandler = () => {
+    setTimerOn(false);
     addToOrderHandler();
+
     window.localStorage.removeItem("items");
     navigate("/order");
   };
@@ -126,11 +135,15 @@ const Checkout = () => {
               <h1 className="font-bold text-xl opacity-60">Total: </h1>
               <h2 className="font-semibold text-xl"> GHC {getTotal()}</h2>
             </div>
+
             <div className="col-span-3 grid grid-cols-3">
               <h1>Qty</h1>
               <h1 className="col-span-1"></h1>
               <h1>Price</h1>
             </div>
+            <h1 className="col-span-12 text-orange-600">
+              swipe left to remove item from basket
+            </h1>
           </li>
 
           {currentItems.map((item, index) => (
@@ -195,7 +208,9 @@ const Checkout = () => {
 
                         <button
                           className="font-semibold bg-white w-full text-center disabled:bg-gray-600"
-                          onClick={() => updateCartItem(item.id, -1)}
+                          onClick={() =>
+                            item.qty > 1 && updateCartItem(item.id, -1)
+                          }
                           disabled={item.qty <= 0 && trash}
                         >
                           <svg
@@ -254,8 +269,13 @@ const Checkout = () => {
       {showModal && (
         <>
           <div className="absolute top-0 bottom-0 right-0 left-0 bg-black bg-opacity-80 grid place-items-center">
-            <div className="bg-white text-6xl font-bold rounded-lg shadow-lg text-gray-600 flex items-center justify-center h-40 w-56 tracking-wider ">
-              {timeSet}
+            <div className="bg-white text-6xl font-bold rounded-lg shadow-lg text-gray-600 flex items-center justify-center h-40 w-56 tracking-wider relative overflow-hidden">
+              <h1 className="z-50">{timeSet}</h1>
+
+              <div
+                className="absolute inset-0 bg-orange-600 text-white"
+                // style={{ width: `${100 - getPercent(time)}%` }}
+              ></div>
             </div>
             <div className="flex gap-5 items-center md:px-10">
               <button

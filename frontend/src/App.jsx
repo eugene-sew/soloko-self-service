@@ -7,6 +7,7 @@ import { useAuth } from "./context/auth";
 import { CartProvider } from "./context/cart";
 import { LayoutProvider } from "./context/layout";
 import { OrderProvider } from "./context/order";
+import { AOrdersProvider } from "./context/allOrders";
 import "./index.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -219,14 +220,16 @@ function App() {
   ]);
 
   return (
-    <OrderProvider>
-      <CartProvider>
-        <LayoutProvider>
-          <RouterProvider router={router} />
-          <ToastContainer />
-        </LayoutProvider>
-      </CartProvider>
-    </OrderProvider>
+    <AOrdersProvider>
+      <OrderProvider>
+        <CartProvider>
+          <LayoutProvider>
+            <RouterProvider router={router} />
+            <ToastContainer />
+          </LayoutProvider>
+        </CartProvider>
+      </OrderProvider>
+    </AOrdersProvider>
   );
 }
 

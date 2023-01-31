@@ -136,7 +136,7 @@ const OrderListPage = () => {
         setTimeout(() => {
           // navigate to reciept screen
           navigation("/reciept");
-        }, 3000);
+        }, 1000);
       })
       .catch((err) => toast.error(err.response.data.error.message));
   };

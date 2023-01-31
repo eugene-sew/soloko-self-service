@@ -30,14 +30,12 @@ export async function createOrder({ data }) {
   //   },
   //   body: JSON.stringify(data),
   // });
-
   // if (!response.ok) {
   //   console.log(response);
   //   toast.error(response.statusText);
   //   throw { message: "could not pst order" };
   // }
   // return response.json();
-
 }
 
 // get a specific order by id , applies to staff only
@@ -69,6 +67,7 @@ export async function getOrders() {
       Authorization: `Bearer ${token}`,
     },
   });
+
   if (response.status != 200) {
     throw { message: response.error };
   }

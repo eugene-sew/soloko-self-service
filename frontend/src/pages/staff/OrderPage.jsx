@@ -1,38 +1,30 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useLoaderData, useParams } from "react-router-dom";
+import { useAOrders } from "../../context/allOrders";
 import { useAuth } from "../../context/auth";
 
 const OrderPage = () => {
   const { oid } = useParams();
   const { token } = useAuth();
-  // const loaderData = getOrder(oid, token);
-  const [info, setInfo] = useState([]);
+  const { getOrder, info, updateAccepted, updateDone } = useAOrders();
+  // const [info, setinfo] = useState(info);
 
   useEffect(() => {
-    const url = `${
-      import.meta.env.VITE_APP_ORDER
-    }${oid}/?populate[0]=attributes&populate[1]=order_items&populate[2]=order_items.meal`;
-    const getOrder = async () => {
-      await axios
-        .get(url, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then((res) => setInfo(res.data.data))
-        .catch((err) => console.error(err));
-    };
+    getOrder(oid);
+  }, [oid, info]);
 
-    getOrder();
-  }, [oid]);
-
+  // useEffect(() => {
+  //   getOrder(oid);
+  //   setinfo(info);
+  // }, [info]);
+  // console.log(info);
   const date = new Date(info?.attributes?.createdAt);
 
   const day = date.toDateString();
   const time = date.toLocaleTimeString();
 
-  const confirmPay = async () => {
+  const confirmPay = async (oid) => {
     const url = `${
       import.meta.env.VITE_APP_ORDER
     }${oid}/?populate[0]=attributes&populate[1]=order_items&populate[2]=order_items.meal`;
@@ -49,52 +41,13 @@ const OrderPage = () => {
     );
   };
 
-  const updateDone = async () => {
-    const url = `${
-      import.meta.env.VITE_APP_ORDER
-    }${oid}/?populate[0]=attributes&populate[1]=order_items&populate[2]=order_items.meal`;
-    await axios
-      .put(
-        url,
-        {
-          data: {
-            preparation_status: "Done",
-          },
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      )
-      .then((res) => setInfo(res.data.data))
-      .catch((err) => console.error(err));
-  };
-
-  const updateAccepted = async () => {
-    const url = `${import.meta.env.VITE_APP_ORDER}${oid}`;
-    await axios
-      .put(
-        url,
-        {
-          data: {
-            preparation_status: "Accepted",
-          },
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      )
-      .then((res) => setInfo(res.data.data))
-      .catch((err) => console.error(err));
-  };
   return (
     <div className="w-full grid grid-cols-12 gap-2 max-h-screen pb-5">
       <div className="col-span-12 grid grid-cols-12 gap-2 items-center">
         <div className="col-span-12 flex w-full justify-between">
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-semibold text-gray-700 ">Order: </h1>
-            <h1 className="text-xl  text-gray-700">
-              {info?.attributes?.Order}
-            </h1>
+            <h1 className="text-2xl font-light text-gray-700 ">Order: </h1>
+            <h1 className="text-xl  text-gray-700 font-bold">{info?.id}</h1>
           </div>
           <div className="text-xs grid">
             <h1>{day}</h1>
@@ -140,7 +93,9 @@ const OrderPage = () => {
           .includes("request") ? (
           <button
             className="bg-lime-900 px-2 py-2 rounded shadow text-white w-full"
-            onClick={() => updateAccepted()}
+            onClick={async () => {
+              await updateAccepted(info.id);
+            }}
           >
             Accept Order
           </button>
@@ -150,7 +105,9 @@ const OrderPage = () => {
             .includes("accepted") && (
             <button
               className="w-full bg-green-600 px-2 py-2 rounded shadow text-white"
-              onClick={() => updateDone()}
+              onClick={async () => {
+                await updateDone(info.id);
+              }}
             >
               Done
             </button>
@@ -175,10 +132,10 @@ const OrderPage = () => {
           <h1 className="col-span-2">Price</h1>
           <h1 className="col-span-2">Sum</h1>
         </div>
-        <div className="col-span-12 grid gap-5 max-h-screen overflow-hidden  overflow-y-scroll hide px-5 pb-52">
+        <div className="col-span-12 flex flex-col gap-5 max-h-screen overflow-hidden  overflow-y-scroll hide px-5 pb-52 mt-2">
           {info?.attributes?.order_items.map((item) => (
             <div
-              className="w-full bg-gray-100 rounded-lg grid grid-cols-12 px-3 py-2 shadow items-center"
+              className="w-full bg-gray-100 rounded-lg grid grid-cols-12 px-3 py-2 shadow items-center h-fit"
               key={item.id}
             >
               <h1 className="text-xl font-medium text-gray-600 col-span-6">

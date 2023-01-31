@@ -61,9 +61,9 @@ const Header = () => {
             >
               <div className="flex-col items-center justify-center md:flex hidden w-full py-2 ">
                 <img
-                  src={fries}
+                  src={category.image}
                   alt="foodmage"
-                  className="w-10 h-10 "
+                  className="w-16 h-16 "
                 />
                 <h2 className="w-full  text-sm font-light text-center mt-2 whitespace-normal">
                   {category.name.toLowerCase()}

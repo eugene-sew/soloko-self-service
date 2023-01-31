@@ -1,6 +1,9 @@
+import { Link, useNavigate } from "react-router-dom";
+
 const Reciept = () => {
   const data = JSON.parse(window.localStorage.getItem("new_order"));
-  console.log(data);
+
+  const navigation = useNavigate();
   return (
     <div className="w-full h-screen py-5">
       <div className="px-5">
@@ -23,6 +26,17 @@ const Reciept = () => {
           </p>
         </div>
       </div>
+
+      {/* <div>{output}</div> */}
+      <button
+        className=" font-bold text-white py-2 shadow-lg rounded-lg text-center bg-orange-500 mb-10 transition delay-300 ease-in-out px-3"
+        onClick={() => {
+          window.localStorage.clear();
+          navigation("/menu/breakfast");
+        }}
+      >
+        Go Home
+      </button>
     </div>
   );
 };
