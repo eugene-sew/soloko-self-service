@@ -49,7 +49,7 @@ export function AuthProvider({ children }) {
         password: password,
       })
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         setTokenStorage(res.data.jwt);
         setToken(res.data?.jwt);
         setToLocalStorage(res.data.user);

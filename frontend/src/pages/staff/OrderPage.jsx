@@ -14,17 +14,12 @@ const OrderPage = () => {
     getOrder(oid);
   }, [oid, info]);
 
-  // useEffect(() => {
-  //   getOrder(oid);
-  //   setinfo(info);
-  // }, [info]);
-  // console.log(info);
   const date = new Date(info?.attributes?.createdAt);
 
   const day = date.toDateString();
   const time = date.toLocaleTimeString();
 
-  const confirmPay = async (oid) => {
+  const confirmPay = async () => {
     const url = `${
       import.meta.env.VITE_APP_ORDER
     }${oid}/?populate[0]=attributes&populate[1]=order_items&populate[2]=order_items.meal`;
@@ -113,7 +108,14 @@ const OrderPage = () => {
             </button>
           )
         )}
-        {!info?.attributes?.paid && (
+        {info?.attributes?.paid ? (
+          <div className="px-[4px] py-[4px] shadow rounded bg-gray-100 text-black cursor-pointer w-full h-fit whitespace-nowrap text-center">
+            Payment ID
+            <br />
+            <div className="w-full h-[1px] bg-orange-600"></div>
+            <span> {info?.attributes?.transaction} </span>
+          </div>
+        ) : (
           <button
             className="bg-blue-600 px-2 py-2 rounded shadow text-white"
             onClick={() => confirmPay()}

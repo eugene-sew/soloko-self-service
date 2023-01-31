@@ -182,6 +182,7 @@ function App() {
           element: <Dashboard />,
           errorElement: <Error />,
           children: [
+            { index: true, element: <Orders /> },
             {
               path: "orders",
               element: <Orders />,
